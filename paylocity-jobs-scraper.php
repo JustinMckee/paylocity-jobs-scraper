@@ -9,34 +9,7 @@ Author URI: https://github.com/JustinMckee
 License: MIT
 */
 
-register_activation_hook( __FILE__, 'paylocity_recruiting_activation' );
-function paylocity_recruiting_activation() {
-    $uploads = wp_upload_dir();
-    $args = array(
-      'scrape_url'  => 'https://recruiting.paylocity.com/recruiting/jobs/All/{YOUR_ID}',
-      'write_file'   => 'jobs.json',
-      'write_dir'   => $uploads['basedir'] .'/'. 'paylocity',
-     );
-
-      if (! is_dir($args['write_dir'])) {
-         wp_mkdir_p($args['write_dir']);
-      }
-
-      $data_file = $args['write_dir'].'/'.$args['write_file'];
-      if ( !is_file($data_file ) ) {
-        $fp = fopen($data_file, 'w');
-        fwrite($fp, '// this file intentionally left blank until data is scraped');
-        fclose($fp);
-        //scrape_jobs_hourly( $args );
-      }
-
-      if (! wp_next_scheduled ( 'my_hourly_event', $args )) {
-          //scrape_jobs_hourly();
-          wp_schedule_event( time(), 'hourly', 'my_hourly_event' );
-      }
-}
-
-add_action( 'my_hourly_event', 'scrape_jobs_hourly', 10 );
+add_action( 'my_hourly_event', 'scrape_jobs_hourly' );
 function scrape_jobs_hourly() {
     // do something every hour
     $uploads = wp_upload_dir();
@@ -61,7 +34,32 @@ function scrape_jobs_hourly() {
         fwrite($fp, json_encode($json->Jobs));
         fclose($fp);
     }
+}
 
+register_activation_hook( __FILE__, 'paylocity_recruiting_activation' );
+function paylocity_recruiting_activation() {
+    $uploads = wp_upload_dir();
+    $args = array(
+      'scrape_url'  => 'https://recruiting.paylocity.com/recruiting/jobs/All/{YOUR_ID}',
+      'write_file'   => 'jobs.json',
+      'write_dir'   => $uploads['basedir'] .'/'. 'paylocity',
+     );
+
+      if (! is_dir($args['write_dir'])) {
+         wp_mkdir_p($args['write_dir']);
+      }
+
+      $data_file = $args['write_dir'].'/'.$args['write_file'];
+      if ( !is_file($data_file ) ) {
+        $fp = fopen($data_file, 'w');
+        fwrite($fp, '// this file intentionally left blank until data is scraped');
+        fclose($fp);
+      }
+
+      if (! wp_next_scheduled ( 'my_hourly_event' )) {
+          do_action('my_hourly_event');
+          wp_schedule_event( time(), 'hourly', 'my_hourly_event' );
+      }
 }
 
 register_deactivation_hook( __FILE__, 'paylocity_recruiting_deactivation' );
@@ -71,7 +69,8 @@ function paylocity_recruiting_deactivation() {
     'write_file'   => 'jobs.json',
     'write_dir'   => $uploads['basedir'] .'/'. 'paylocity',
    );
-    wp_clear_scheduled_hook( 'my_hourly_event' );
+   $timestamp = wp_next_scheduled( 'my_hourly_event' );
+    wp_unschedule_event( $timestamp, 'my_hourly_event' );
 
     // Removes directory recursively
 
