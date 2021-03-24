@@ -13,7 +13,7 @@ register_activation_hook( __FILE__, 'paylocity_recruiting_activation' );
 function paylocity_recruiting_activation() {
     $uploads = wp_upload_dir();
     $args = array(
-      'scrape_url'  => 'https://recruiting.paylocity.com/recruiting/jobs/All/db522a36-736b-4055-97eb-f6ac84b027c3/Trout-Unlimited-Inc',
+      'scrape_url'  => 'https://recruiting.paylocity.com/recruiting/jobs/All/{YOUR_ID}',
       'write_file'   => 'jobs.json',
       'write_dir'   => $uploads['basedir'] .'/'. 'paylocity',
      );
@@ -41,7 +41,7 @@ function scrape_jobs_hourly() {
     // do something every hour
     $uploads = wp_upload_dir();
     $args = array(
-      'scrape_url'  => 'https://recruiting.paylocity.com/recruiting/jobs/All/db522a36-736b-4055-97eb-f6ac84b027c3/Trout-Unlimited-Inc',
+      'scrape_url'  => 'https://recruiting.paylocity.com/recruiting/jobs/All/{YOUR_ID}',
       'write_file'   => 'jobs.json',
       'write_dir'   => $uploads['basedir'] .'/'. 'paylocity',
      );
@@ -67,7 +67,7 @@ function scrape_jobs_hourly() {
 register_deactivation_hook( __FILE__, 'paylocity_recruiting_deactivation' );
 function paylocity_recruiting_deactivation() {
   $args = array(
-    'scrape_url'  => 'https://recruiting.paylocity.com/recruiting/jobs/All/db522a36-736b-4055-97eb-f6ac84b027c3/Trout-Unlimited-Inc',
+    'scrape_url'  => 'https://recruiting.paylocity.com/recruiting/jobs/All/{YOUR_ID}',
     'write_file'   => 'jobs.json',
     'write_dir'   => $uploads['basedir'] .'/'. 'paylocity',
    );
