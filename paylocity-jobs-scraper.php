@@ -128,3 +128,6 @@ function url_get_contents($url, $useragent='cURL', $headers=false, $follow_redir
     // send back the data
     return $result;
 }
+
+// Setup shortcode
+require 'admin/shortcode.php';
