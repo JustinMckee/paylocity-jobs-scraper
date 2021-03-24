@@ -1,7 +1,7 @@
 <?php
 /*
-Plugin Name: Paylocity Recruiting Data Scrape
-Plugin URI: http://www.tu.org
+Plugin Name: Paylocity Jobs Scraper
+Plugin URI: https://github.com/JustinMckee/paylocity-jobs-scraper/
 Description: Scrapes job data hourly from Paylocity and saves it as JSON in uploads directory.
 Version: 1.0
 Author: Justin McKee
