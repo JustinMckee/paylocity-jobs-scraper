@@ -130,4 +130,4 @@ function url_get_contents($url, $useragent='cURL', $headers=false, $follow_redir
 }
 
 // Setup shortcode
-require 'admin/shortcode.php';
+include_once 'admin/shortcode.php';

@@ -1,12 +1,17 @@
 <?php
+// Resources
+add_action( 'init', 'pjs_register_resources' );
+function pjs_register_resources(){
+  wp_register_script( 'paylocity-jobs', plugin_dir_url( __DIR__ ) . 'dist/scripts/main.js', array(), filemtime( plugin_dir_path( __DIR__ ) . 'dist/scripts/main.js'), true );
+}
 
-$plugin_dir = WP_PLUGIN_DIR . '/paylocity-jobs-scraper';
+add_action( 'init', 'pjs_add_custom_shortcode' );
+function pjs_add_custom_shortcode() {
+  // plugin directory found!
+  add_shortcode( 'paylocityjobs', 'pjs_shortcode' );
 
-if ( is_dir( $plugin_dir ) ) {
-    // plugin directory found!
-    add_shortcode( 'myshortcode', 'my_handle_shortcode' );
-
-    function my_handle_shortcode() {
-      wp_enqueue_script( 'paylocity_jobs', $plugin_dir.'/assets/dist/main.js' );
-    }
+  function pjs_shortcode() {
+    wp_enqueue_script( 'paylocity-jobs' );
+    return '<section class="pjs_container"></section>';
+  }
 }
